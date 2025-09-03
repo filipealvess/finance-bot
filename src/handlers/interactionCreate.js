@@ -1,12 +1,13 @@
 import {insert} from '../db/index.js';
+import {normalize} from '../utils/texts.js';
 
 
 function reduce(interaction) {
     const value = interaction.options.getNumber('valor');
-    const category = interaction.options.getString('categoria');
+    const category = normalize(interaction.options.getString('categoria'));
 
     return {
-        category: category.toLowerCase(),
+        category,
         createdAt: new Date().toISOString(),
         id: interaction.id,
         type: interaction.commandName,
