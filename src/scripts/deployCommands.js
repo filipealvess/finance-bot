@@ -2,6 +2,28 @@ import {REST, Routes} from 'discord.js';
 
 import 'dotenv/config';
 
+const incomeOptions = [
+    {name: 'Salário', value: 'salario'},
+    {name: 'Dividendo', value: 'dividendos'},
+    {name: 'Presente', value: 'presente'},
+    {name: 'Rendimento', value: 'rendimento'},
+    {name: 'Bônus', value: 'bonus'},
+];
+
+const expenseOptions = [
+    {name: 'Mercado', value: 'mercado'},
+    {name: 'Energia', value: 'energia'},
+    {name: 'Água/Saneamento', value: 'agua-saneamento'},
+    {name: 'Internet', value: 'internet'},
+    {name: 'Moradia', value: 'moradia'},
+    {name: 'Compra', value: 'compra'},
+    {name: 'Restaurante', value: 'restaurante'},
+    {name: 'Viagem', value: 'viagem'},
+    {name: 'Presente', value: 'presente'},
+    {name: 'Imposto', value: 'imposto'},
+    {name: 'Cartão de crédito', value: 'cartao-credito'},
+];
+
 const commands = [
     {
         name: 'despesa',
@@ -18,6 +40,7 @@ const commands = [
                 description: 'A categoria da despesa',
                 type: 3, // ApplicationCommandOptionType.String
                 required: true,
+                choices: expenseOptions,
             },
         ],
     },
@@ -36,6 +59,7 @@ const commands = [
                 description: 'A categoria da receita',
                 type: 3, // ApplicationCommandOptionType.String
                 required: true,
+                choices: incomeOptions,
             },
         ],
     },
