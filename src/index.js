@@ -1,5 +1,5 @@
 import {Client, GatewayIntentBits} from 'discord.js';
-import handleMessageCreate from './handlers/messageCreate.js';
+import handleInteractionCreate from './handlers/interactionCreate.js';
 
 import 'dotenv/config';
 
@@ -17,14 +17,14 @@ client.once('clientReady', () => {
     console.log(`[INFO] Connected bot: "${client.user.tag}"\n`);
 });
 
-client.on('messageCreate', message => {
-    if (message.author.bot === true) {
+client.on('interactionCreate', async interaction => {
+    if (interaction.isCommand() === false) {
         return;
     }
 
-    console.log(`[INFO] Message "${message.content}" received from "${message.author.username}"`);
+    console.log(`[INFO] Slash command "/${interaction.commandName}" received from "${interaction.member.user.username}"`);
 
-    handleMessageCreate(message);
+    handleInteractionCreate(interaction);
 });
 
 client.login(process.env.DISCORD_TOKEN);
