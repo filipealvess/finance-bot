@@ -1,4 +1,4 @@
-import {insert} from '../db/index.js';
+import {insert, select} from '../db/index.js';
 import {normalize} from '../utils/texts.js';
 
 
@@ -23,7 +23,7 @@ async function handleIncome(interaction) {
     if (result === null) {
         console.error(`[ERROR] Failed to insert income`);
         console.error(data);
-        await interaction.reply({content: 'Falha ao salvar receita'});
+        await interaction.reply({content: ':bangbang: Falha ao salvar receita'});
         return;
     }
 
@@ -31,7 +31,7 @@ async function handleIncome(interaction) {
     console.log(data);
 
     await interaction.reply({
-        content: `Receita de **R$ ${data.value}** com **${data.category}** registrada com sucesso!`,
+        content: `:white_check_mark: Receita de **R$ ${data.value}** com **${data.category}** registrada com sucesso!`,
     });
 }
 
@@ -42,7 +42,7 @@ async function handleExpense(interaction) {
     if (result === null) {
         console.error(`[ERROR] Failed to insert expense`);
         console.error(data);
-        await interaction.reply({content: 'Falha ao salvar despesa'});
+        await interaction.reply({content: ':bangbang: Falha ao salvar despesa'});
         return;
     }
 
@@ -50,7 +50,64 @@ async function handleExpense(interaction) {
     console.log(data);
 
     await interaction.reply({
-        content: `Despesa de **R$ ${data.value}** com **${data.category}** registrada com sucesso!`,
+        content: `:white_check_mark: Despesa de **R$ ${data.value}** com **${data.category}** registrada com sucesso!`,
+    });
+}
+
+async function handleBalance(interaction) {
+    const year = interaction.options.getString('ano');
+    const month = interaction.options.getString('mes');
+    const user = interaction.member.user.username;
+    const monthText = String(Number(month) + 1).padStart(2, '0');
+    const stored = await select();
+
+    if (stored === null) {
+        await interaction.reply({
+            content: `:bangbang: Falha ao calcular saldo de **${monthText}/${year}**`,
+        });
+        return;
+    }
+
+    let income = 0;
+    let expense = 0;
+
+    for (let item in {}) {
+
+    }
+
+    stored.forEach(transaction => {
+        const timestamp = new Date(transaction.createdAt);
+
+        if (transaction.user !== user ||
+            timestamp.getFullYear() !== Number(year) ||
+            timestamp.getMonth() !== Number(month)) {
+            return;
+        }
+
+        if (transaction.type === 'receita') {
+            income += Number(transaction.value);
+        }
+
+        else if (transaction.type === 'despesa') {
+            expense += Number(transaction.value);
+        }
+    });
+
+    if (income === 0 && expense === 0) {
+        console.log(`[INFO] No income/expense for "${monthText}/${year}"`);
+        await interaction.reply({
+            content: `:information_source: Nenhuma receita ou despesa cadastrada em **${monthText}/${year}**`,
+        });
+        return;
+    }
+
+    const balance = income - expense;
+    const balanceText = balance < 0 ? `-R$ ${(balance * -1).toFixed(2)}` : `R$ ${(balance).toFixed(2)}`;
+
+    console.log(`[INFO] Balance of "${monthText}/${year}" is "${balanceText}"`);
+
+    await interaction.reply({
+        content: `:clipboard: O saldo de **${monthText}/${year}** é de **${balanceText}**`,
     });
 }
 
@@ -63,6 +120,10 @@ async function handleinteractionCreate(interaction) {
 
     else if (commandName === 'receita') {
         await handleIncome(interaction);
+    }
+
+    else if (commandName === 'saldo') {
+        await handleBalance(interaction);
     }
 }
 

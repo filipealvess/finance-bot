@@ -24,6 +24,29 @@ const expenseOptions = [
     {name: 'Cartão de crédito', value: 'cartao-credito'},
 ];
 
+const years = [
+    {name: '2025', value: '2025'},
+    {name: '2024', value: '2024'},
+    {name: '2023', value: '2023'},
+    {name: '2022', value: '2022'},
+    {name: '2021', value: '2021'},
+];
+
+const months = [
+    {name: 'Dezembro', value: '11'},
+    {name: 'Novembro', value: '10'},
+    {name: 'Outubro', value: '9'},
+    {name: 'Setembro', value: '8'},
+    {name: 'Agosto', value: '7'},
+    {name: 'Julho', value: '6'},
+    {name: 'Junho', value: '5'},
+    {name: 'Maio', value: '4'},
+    {name: 'Abril', value: '3'},
+    {name: 'Março', value: '2'},
+    {name: 'Fevereiro', value: '1'},
+    {name: 'Janeiro', value: '0'},
+];
+
 const commands = [
     {
         name: 'despesa',
@@ -60,6 +83,26 @@ const commands = [
                 type: 3, // ApplicationCommandOptionType.String
                 required: true,
                 choices: incomeOptions,
+            },
+        ],
+    },
+    {
+        name: 'saldo',
+        description: 'Consulta o saldo do mês informado',
+        options: [
+            {
+                name: 'ano',
+                description: 'O ano que será consultado',
+                type: 3, // ApplicationCommandOptionType.String
+                required: true,
+                choices: years,
+            },
+            {
+                name: 'mes',
+                description: 'O mês que será consultado',
+                type: 3, // ApplicationCommandOptionType.String
+                required: true,
+                choices: months,
             },
         ],
     },
