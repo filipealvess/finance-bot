@@ -1,3 +1,6 @@
+import {insert} from '../db/index.js';
+
+
 function reduce(interaction) {
     const value = interaction.options.getNumber('valor');
     const category = interaction.options.getString('categoria');
@@ -14,6 +17,14 @@ function reduce(interaction) {
 
 async function handleIncome(interaction) {
     const data = reduce(interaction);
+    const result = await insert(data);
+
+    if (result === null) {
+        console.error(`[ERROR] Failed to insert income`);
+        console.error(data);
+        await interaction.reply({content: 'Falha ao salvar receita'});
+        return;
+    }
 
     console.log(`[INFO] Income stored`);
     console.log(data);
@@ -25,6 +36,14 @@ async function handleIncome(interaction) {
 
 async function handleExpense(interaction) {
     const data = reduce(interaction);
+    const result = await insert(data);
+
+    if (result === null) {
+        console.error(`[ERROR] Failed to insert expense`);
+        console.error(data);
+        await interaction.reply({content: 'Falha ao salvar despesa'});
+        return;
+    }
 
     console.log(`[INFO] Expense stored`);
     console.log(data);
